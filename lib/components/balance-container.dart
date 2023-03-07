@@ -1,18 +1,22 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
-class BalanceContainer extends StatelessWidget {
+class BalanceContainer extends StatefulWidget {
   const BalanceContainer(
       {super.key,
       required this.balance,
       required this.income,
       required this.expense});
 
-  final balance;
-  final income;
-  final expense;
+  final int balance;
+  final int income;
+  final int expense;
 
+  @override
+  State<BalanceContainer> createState() => _BalanceContainerState();
+}
+
+class _BalanceContainerState extends State<BalanceContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +43,7 @@ class BalanceContainer extends StatelessWidget {
             style: TextStyle(color: Colors.grey[500], fontSize: 16),
           ),
           Text(
-            '\$ $balance',
+            '\$ ${widget.balance}',
             style: TextStyle(color: Colors.grey[800], fontSize: 40),
           ),
 
@@ -75,7 +79,7 @@ class BalanceContainer extends StatelessWidget {
                         style: TextStyle(color: Colors.grey),
                       ),
                       Text(
-                        '\$ $income',
+                        '\$ ${widget.income}',
                         style: TextStyle(color: Colors.grey.shade800),
                       ),
                     ],
@@ -106,11 +110,11 @@ class BalanceContainer extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        'Income',
+                        'Expense',
                         style: TextStyle(color: Colors.grey),
                       ),
                       Text(
-                        '\$ $expense',
+                        '\$ ${widget.expense}',
                         style: TextStyle(color: Colors.grey.shade800),
                       ),
                     ],

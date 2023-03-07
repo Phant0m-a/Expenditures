@@ -2,10 +2,13 @@ import 'package:gsheets/gsheets.dart';
 
 class gSheetApi {
 //numberofTodo
-  static int numberofTodo = 0;
+  static int numberofTransection = 0;
 
 //list of current-Todo
-  static List<List<dynamic>> currentTodo = [];
+  static List<List<dynamic>> currentTransections = [];
+
+// last accessed time!
+  static var lastAc = '';
 
 //gsheet creds
   static const _credentials = r'''{
@@ -34,47 +37,61 @@ class gSheetApi {
 
 //fetch worksheet by its title {mine is 2023}
     _workSheet = excelSheet.worksheetByTitle('Sheet2023');
+
+    //get last ac value
+    lastAc = await _workSheet!.values.value(column: 6, row: 1);
+
 // insert data into excelsheet
-    _workSheet!.values.insertValue('Expense loaded...', column: 1, row: 1);
+    _workSheet!.values
+        .insertValue(DateTime.now().toIso8601String(), column: 5, row: 1);
     getCurrentTodo();
   }
 
   static Future postNew(
-      String transectionName, String money, String isIncome) async {
+      String transectionName, String money, bool isIncome) async {
+    var currentTime = DateTime.now().toIso8601String() ;
     if (_workSheet == null) return print('error------------------------------');
-    numberofTodo++;
-    currentTodo
-        .add([transectionName, money, isIncome == true ? 'income' : 'expense']);
+    numberofTransection++;
+    currentTransections
+        .add([transectionName, money, isIncome == true ? 'income' : 'expense',currentTime]);
     await _workSheet!.values.appendRow(
-        [transectionName, money, isIncome == true ? 'income' : 'expense']);
+        [transectionName, money, isIncome == true ? 'income' : 'expense',currentTime]);
   }
 
 //count notes and load notes
-  Future getCurrentTodo() async {
-    while (await _workSheet!.values.value(column: 1, row: numberofTodo + 1) !=
+  static Future getCurrentTodo() async {
+    while ((await _workSheet!.values
+            .value(column: 1, row: numberofTransection + 1)) !=
         '') {
       //if not empty then keep incrementing the numberofTodo
-      numberofTodo++;
-    }
+      numberofTransection++;
+      print('counting::: $numberofTransection');
 
+      // var result =
+      //     await _workSheet!.values.value(column: 3, row: numberofTodo + 1);
+      // print(result);
+    }
     //after counting...load the todo!
     loadAllTransections();
   }
 
 //loadAllTodos
-  Future loadAllTransections() async {
-    for (var i = 0; i < numberofTodo; i++) {
-      String transectionName =
+  static Future loadAllTransections() async {
+    for (int i = 1; i < numberofTransection; i++) {
+      final String transectionName =
           await _workSheet!.values.value(column: 1, row: i + 1);
-      String money = await _workSheet!.values.value(column: 2, row: i + 1);
-
-      String incomeOrexpense =
+      final String money =
+          await _workSheet!.values.value(column: 2, row: i + 1);
+      final String incomeOrexpense =
           await _workSheet!.values.value(column: 3, row: i + 1);
 
-      if (currentTodo.length < numberofTodo) {
-        currentTodo.add([money, transectionName, incomeOrexpense]);
+      if (currentTransections.length < numberofTransection) {
+        currentTransections.add([transectionName, money, incomeOrexpense]);
       }
     }
+
+    print(currentTransections);
+
     loading = false;
   }
 }

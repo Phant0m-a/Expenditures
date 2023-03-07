@@ -6,48 +6,62 @@ import 'package:home/utils/gsheet_api.dart';
 class MiddleContainer extends StatelessWidget {
   const MiddleContainer({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
       child: ListView.builder(
-        itemCount: gSheetApi.currentTodo.length,
+        itemCount: gSheetApi.currentTransections.length,
         itemBuilder: (context, index) => Container(
           color: Colors.grey[100],
           margin: const EdgeInsets.symmetric(vertical: 5.0),
-          child: TransectionTile(amount: gSheetApi.currentTodo[index][0] , incomeOrexpense: gSheetApi.currentTodo[index][2], transectionName: gSheetApi.currentTodo[index][1],index:index),
+          child: TransectionTile(
+            amount: gSheetApi.currentTransections[index][0],
+            transectionName: gSheetApi.currentTransections[index][1],
+            incomeOrexpense: gSheetApi.currentTransections[index][2],
+          ),
         ),
       ),
     ));
   }
 }
 
-class TransectionTile extends StatefulWidget {
-  const TransectionTile({super.key, required this.transectionName, required this.amount, required this.incomeOrexpense, required this.index});
+class TransectionTile extends StatelessWidget {
+  const TransectionTile({
+    super.key,
+    required this.transectionName,
+    required this.amount,
+    required this.incomeOrexpense,
+  });
 
   final String transectionName;
-  final int amount;
+  final String amount;
   final String incomeOrexpense;
-  final int index;
 
-  @override
-  State<TransectionTile> createState() => _TransectionTileState();
-}
-
-class _TransectionTileState extends State<TransectionTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.arrow_upward),
+      leading: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: incomeOrexpense.toString() == 'expense'
+            ? Icon(Icons.arrow_downward, color: Colors.red)
+            : Icon(
+                Icons.arrow_upward,
+                color: Colors.green,
+              ),
+      ),
       title: Text(
-       widget.transectionName ,
+        transectionName,
         style: TextStyle(color: Colors.green),
       ),
       trailing: Text(
-        '\$ ${widget.incomeOrexpense == 'income'? "+": "-"} ${widget.amount}',
-        style: TextStyle(color: Colors.grey),
+        '\$ ${incomeOrexpense == 'income' ? "+" : "-"}$amount',
+        style: TextStyle(
+            color: incomeOrexpense == 'income' ? Colors.green : Colors.red),
       ),
     );
   }
