@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:gsheets/gsheets.dart';
 import 'package:home/components/my_progress_indicator.dart';
 
 import 'components/balance-container.dart';
@@ -52,6 +53,9 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
       // gSheetApi.currentTransections.clear();
       // gSheetApi.loading = true;
       // timerStarter = false;
+      gSheetApi.balance = 0;
+      gSheetApi.income = 0;
+      gSheetApi.expense = 0;
       startLoadingTransections();
     });
   }
@@ -61,7 +65,9 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
   void startLoadingTransections() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (gSheetApi.loading == false) {
+       gSheetApi. CalcuateAll();
         setState(() {});
+       
         timer.cancel();
       }
     });
@@ -113,7 +119,8 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                         TextField(
                           controller: _amountController,
                           decoration: const InputDecoration(
-                              hintText: '\$ 00.0', border: OutlineInputBorder()),
+                              hintText: '\$ 00.0',
+                              border: OutlineInputBorder()),
                         ),
                         const SizedBox(height: 3),
                         //item name
@@ -136,16 +143,16 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                                 )),
                             const SizedBox(width: 10),
                             ElevatedButton(
-                                onPressed: ()async {
+                                onPressed: () async {
                                   // if (_formKey.currentState!.validate()) {
                                   //   //add new transection
                                   //   Navigator.of(context).pop();
                                   // }
-                                await  gSheetApi.postNew(
+                                  await gSheetApi.postNew(
                                       _transectionNameController.text.trim(),
                                       _amountController.text.trim(),
                                       myincome);
-              
+
                                   resetter();
                                   Navigator.of(context).pop();
                                 },
@@ -175,17 +182,15 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
               child: Column(
                 children: [
                   // balance container
-                  const BalanceContainer(
-                    balance: 20000,
-                    expense: 1000,
-                    income: 15000,
+                  BalanceContainer(
+                    balance: gSheetApi.balance,
+                    expense: gSheetApi.expense,
+                    income: gSheetApi.income,
                   ),
                   const SizedBox(height: 10),
-          
+
                   Expanded(
                     child: SizedBox(
-                      
-                  
                         child: FutureBuilder(
                       future: gSheetApi.getCurrentTodo(),
                       builder: (BuildContext context, snapshot) {
@@ -203,11 +208,13 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                                 itemCount: gSheetApi.currentTransections.length,
                                 itemBuilder: (context, index) => Container(
                                   color: Colors.grey[100],
-                                  margin: const EdgeInsets.symmetric(vertical: 5.0),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
                                   child: TransectionTile(
                                     transectionName:
                                         gSheetApi.currentTransections[index][0],
-                                    amount: gSheetApi.currentTransections[index][1],
+                                    amount: gSheetApi.currentTransections[index]
+                                        [1],
                                     incomeOrexpense:
                                         gSheetApi.currentTransections[index][2],
                                   ),
@@ -218,7 +225,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                       },
                     )),
                   ),
-          
+
                   // middle - container
                   // gSheetApi.loading == true
                   //     ? Expanded(

@@ -8,9 +8,9 @@ class BalanceContainer extends StatefulWidget {
       required this.income,
       required this.expense});
 
-  final int balance;
-  final int income;
-  final int expense;
+  final double balance;
+  final double income;
+  final double expense;
 
   @override
   State<BalanceContainer> createState() => _BalanceContainerState();

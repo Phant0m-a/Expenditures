@@ -46,11 +46,16 @@ class gSheetApi {
 
     //get last ac value
     lastAc = await _workSheet!.values.value(column: 6, row: 1);
-
+    numberofTransection = await _workSheet!.rowCount;
+    var all = await _workSheet?.values.map.allRows();
+    for (var i = 0; i < all!.length; i++) {
+      print(all[i]);
+    }
 // insert data into excelsheet
     _workSheet!.values
         .insertValue(DateTime.now().toIso8601String(), column: 5, row: 1);
-    getCurrentTodo();
+    // getCurrentTodo();
+    loadAllTransections();
   }
 
   static Future postNew(
@@ -79,23 +84,26 @@ class gSheetApi {
     ]);
   }
 
-//count notes and load notes
-  static Future getCurrentTodo() async {
-    while ((await _workSheet!.values
-            .value(column: 1, row: numberofTransection + 1)) !=
-        '') {
-      //if not empty then keep incrementing the numberofTodo
-      numberofTransection++;
-      print('counting::: $numberofTransection');
+  static List<List<dynamic>> efficientList = [];
 
-      // var result =
-      //     await _workSheet!.values.value(column: 3, row: numberofTodo + 1);
-      // print(result);
-    }
-    //after counting...load the todo!
-    loadAllTransections();
-    // recalculate data!
-  }
+//count notes and load notes
+  // static Future getCurrentTodo() async {
+  //   while ((await _workSheet!.values
+  //           .value(column: 1, row: numberofTransection + 1)) !=
+  //       '') {
+  //     //if not empty then keep incrementing the numberofTodo
+  //     numberofTransection++;
+  //     // efficientList.add([]);
+  //     print('counting::: $numberofTransection');
+
+  //     // var result =
+  //     //     await _workSheet!.values.value(column: 3, row: numberofTodo + 1);
+  //     // print(result);
+  //   }
+  //   //after counting...load the todo!
+  //   loadAllTransections();
+  //   // recalculate data!
+  // }
 
 //loadAllTodos
   static Future loadAllTransections() async {
@@ -132,7 +140,3 @@ class gSheetApi {
     balance = income - expense;
   }
 }
-
-//TODO: use the new method to rewrite the app
-//TODO: implement future builder properly
-//TODO: implement splash screen while content is loading
