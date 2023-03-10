@@ -37,11 +37,6 @@ class gSheetApi {
   static final _gsheets = GSheets(_credentials);
   static Worksheet? _workSheet;
 
-  //*newcode
-  List<List<dynamic>> allTransections = [];
-  List<Map<String, String>>? fetchedTransections;
-  //
-
   Future init() async {
 //fetch the spreadsheet by its id
     final excelSheet = await _gsheets.spreadsheet(_gSheetsId);
@@ -51,40 +46,12 @@ class gSheetApi {
 
     //get last ac value
     lastAc = await _workSheet!.values.value(column: 6, row: 1);
-    numberofTransection = await _workSheet!.rowCount;
 
 // insert data into excelsheet
     _workSheet!.values
         .insertValue(DateTime.now().toIso8601String(), column: 5, row: 1);
-    // getCurrentTodo();
-    loadAllTransections();
-
-    //^new code
-    //GET DATA from google sheets
-    await fetchData();
-    //
+    getCurrentTodo();
   }
-
-  //GET DATA from google sheets
-  Future fetchData() async {
-    fetchedTransections = await _workSheet?.values.map.allRows();
-
-    for (var i = 1; i < fetchedTransections!.length; i++) {
-      print(fetchedTransections![i]);
-      allTransections.add([
-        fetchedTransections![i][1],
-        fetchedTransections![i][2],
-        fetchedTransections![i][3],
-      ]);
-      if (currentTransections[i][2] == 'income') {
-        income += double.parse(fetchedTransections![i][1]!);
-      } else {
-        expense += double.parse(fetchedTransections![i][1]!);
-      }
-    }
-    balance = income - expense;
-  }
-  //
 
   static Future postNew(
       String transectionName, String money, bool isIncome) async {
@@ -112,26 +79,23 @@ class gSheetApi {
     ]);
   }
 
-  static List<List<dynamic>> efficientList = [];
-
 //count notes and load notes
-  // static Future getCurrentTodo() async {
-  //   while ((await _workSheet!.values
-  //           .value(column: 1, row: numberofTransection + 1)) !=
-  //       '') {
-  //     //if not empty then keep incrementing the numberofTodo
-  //     numberofTransection++;
-  //     // efficientList.add([]);
-  //     print('counting::: $numberofTransection');
+  static Future getCurrentTodo() async {
+    while ((await _workSheet!.values
+            .value(column: 1, row: numberofTransection + 1)) !=
+        '') {
+      //if not empty then keep incrementing the numberofTodo
+      numberofTransection++;
+      print('counting::: $numberofTransection');
 
-  //     // var result =
-  //     //     await _workSheet!.values.value(column: 3, row: numberofTodo + 1);
-  //     // print(result);
-  //   }
-  //   //after counting...load the todo!
-  //   loadAllTransections();
-  //   // recalculate data!
-  // }
+      // var result =
+      //     await _workSheet!.values.value(column: 3, row: numberofTodo + 1);
+      // print(result);
+    }
+    //after counting...load the todo!
+    loadAllTransections();
+    // recalculate data!
+  }
 
 //loadAllTodos
   static Future loadAllTransections() async {
@@ -167,28 +131,7 @@ class gSheetApi {
 
     balance = income - expense;
   }
-
-// fetch data ✅
-
-//Put data on 2nd List ✅
-
-//calculate income, expense, balance ✅
-
-//configure future builder to wait while data is being fetched from google ...
-
-//display listview.builder
-
-//add new transection on 2nd list and to google sheet
-
-//re-calculate income, expense, balance
-
-//add splash screen
-
-// iron out code..
-
 }
-
-
 
 //TODO: use the new method to rewrite the app
 //TODO: implement future builder properly

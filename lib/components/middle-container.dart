@@ -11,14 +11,14 @@ class MiddleContainer extends StatelessWidget {
     return Expanded(
         child: Container(
       child: ListView.builder(
-        itemCount: gSheetApi.currentTransections.length,
+        itemCount: GSheetApi.currentTransections.length,
         itemBuilder: (context, index) => Container(
           color: Colors.grey[100],
           margin: const EdgeInsets.symmetric(vertical: 5.0),
           child: TransectionTile(
-            amount: gSheetApi.currentTransections[index][0],
-            transectionName: gSheetApi.currentTransections[index][1],
-            incomeOrexpense: gSheetApi.currentTransections[index][2],
+            amount: GSheetApi.currentTransections[index][0],
+            transectionName: GSheetApi.currentTransections[index][1],
+            incomeOrexpense: GSheetApi.currentTransections[index][2],
           ),
         ),
       ),

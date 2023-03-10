@@ -21,10 +21,12 @@ This app keep track of user income and expenses!
     3. ironed out app!
 
 
-## Future updates:
-    1. Will include working income and expenses on dashboard
-    2. will show total balance
-    3. will be more polished 
+## 9 march 2023
+    1. include working income and expenses on dashboard
+    2. total balance
+    3. more polished 
+    4. more faster and reliable method.. 
+    5. added splash screen
 
 ## Getting Started
 
