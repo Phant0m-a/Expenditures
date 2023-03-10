@@ -2,6 +2,12 @@
 
 This app keep track of user income and expenses!
 
+splash screen
+![Model](https://github.com/Phant0m-a/Expenditures/blob/main/lib/assets/s1.png)
+
+app
+![Model](https://github.com/Phant0m-a/Expenditures/blob/main/lib/assets/s2.png)
+
 # Fix log:
 
 ## 20 feb 2023
